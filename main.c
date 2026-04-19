@@ -9,6 +9,7 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>
+#include <stdlib.h>
 // ====================================================================
 // Variables
 
@@ -19,23 +20,98 @@ uint16_t leer_ADC6(void);
 void enviar_string(char *s);
 void enviar_char(char c);
 void enviar_uint16_t(uint16_t valor);
+char recibir_char(void);
+void limpiar_terminal(void);
+void actualizar_leds(uint8_t valor);
 // ====================================================================
 // Main Function
-int main(void)
-{
+int main(void) {
 	setup();
-	enviar_string("Sistema iniciado\r\n");
-    enviar_string("Valor ADC6:\r\n");
-	while(1)
-	{
-	     uint16_t valor_adc = leer_ADC6();  // Leer ADC6
-        
-        enviar_uint16_t(valor_adc);        // Enviar valor numérico
-        enviar_string("\r\n");              // Salto de línea
-        
-        _delay_ms(500);  // Enviar cada 500ms
-	}
-}
+	
+	char comando;
+	uint8_t valor_leds = 0;
+	enviar_string("\r\n=== Sistema ===\r\n");
+	enviar_string("Comandos: ");
+	enviar_string("\r\n> 1-ADC ");
+	enviar_string("\r\n> 2-LEDs ");
+	while(1) {
+		// Refresco principal
+		actualizar_leds(valor_leds);
+		
+		if (UCSR0A & (1 << RXC0)) {
+			comando = recibir_char();
+			
+			if (comando == '1') {
+				uint16_t valor_adc = leer_ADC6();
+				limpiar_terminal();
+				enviar_string("========================\r\n ");
+				enviar_string("\r\nADC6 = ");
+				enviar_uint16_t(valor_adc);
+				enviar_string("\r\n\r\n========================\r\n ");
+				enviar_string("\r\n=== Sistema ===\r\n");
+				enviar_string("Comandos: ");
+				enviar_string("\r\n> 1-ADC ");
+				enviar_string("\r\n> 2-LEDs ");
+			}
+			else if (comando == '2') {
+				uint16_t valor_temporal = 0;
+				uint8_t entrada_valida = 0;
+				uint8_t digito_count = 0;
+				uint8_t leyendo = 0;
+				
+				enviar_string("Ingresa un valor de 3 digitos entre  0 y 255 ");
+				leyendo = 1;
+				
+					    while(leyendo == 1) {
+						    actualizar_leds(valor_leds);
+						    
+						    if (UCSR0A & (1 << RXC0)) {
+							    char c = recibir_char();
+							    
+							    if (c >= '0' && c <= '9') {
+								    enviar_char(c);  // eco
+								    valor_temporal = valor_temporal * 10 + (c - '0');
+								    digito_count++;
+								    
+								    if (digito_count == 3) {
+									    if (valor_temporal <= 256) {
+										    valor_leds = (uint8_t)valor_temporal;
+													limpiar_terminal();
+													enviar_string("========================\r\n ");
+													enviar_string("\r\nOK: LEDs actualizados\r\n ");
+													enviar_string("\r\n========================\r\n ");
+													enviar_string("\r\n=== Sistema ===\r\n");
+													enviar_string("Comandos: ");
+													enviar_string("\r\n> 1-ADC ");
+													enviar_string("\r\n> 2-LEDs ");
+											
+										    } else {
+											limpiar_terminal();	
+											enviar_string("========================\r\n ");
+										    enviar_string("\r\nError: debe ser <= 255 ");
+											enviar_string("\r\r========================\r\n ");
+											enviar_string("\r\n=== Sistema ===\r\n");
+											enviar_string("Comandos: ");
+											enviar_string("\r\n> 1-ADC ");
+											enviar_string("\r\n> 2-LEDs ");
+									    }
+									    leyendo = 0;  // salir del bucle
+								    }
+							    }
+							    else if (c == '\r' || c == '\n') {
+								    // ignorar enter
+							    }
+							    else {
+									limpiar_terminal();
+								    enviar_string("\r\nError: solo dígitos\r\n> ");
+								    leyendo = 0;  // salir con error
+							    }
+						    }
+					    }
+				    }
+				}
+			}
+		}
 // ====================================================================
 // NON-Interrupt subroutines
 
@@ -109,4 +185,45 @@ uint16_t leer_ADC6(void)
 	while (ADCSRA & (1 << ADSC));
 	return ADC;
 }
+//lee la terminal
+char recibir_char(void) {
+	while (!(UCSR0A & (1 << RXC0)));  // Esperar hasta recibir dato
+	return UDR0;                       // Retornar el caracter recibido
+}
+//limpia el texto
+void limpiar_terminal(void) {
+	  // Enviar 50 saltos de línea para "limpiar la" pantalla
+	  for (int i = 0; i < 50; i++) {
+		  enviar_string("\r\n");
+	}
+}
+
+// Función para actualizar LEDs multiplexados (llamar constantemente)
+void actualizar_leds(uint8_t valor) {
+	static uint8_t multiplexor = 0;
+	uint8_t nibble_alto = (valor >> 4) & 0x0F;
+	uint8_t nibble_bajo = valor & 0x0F;
+	
+	if (multiplexor == 0) {
+		// Mostrar nibble alto (bits 4-7) activando PD7
+		PORTD |= (1 << PORTD7);
+		PORTD &= ~(1 << PORTD6);
+		PORTB = (PORTB & 0xF0) | (nibble_alto & 0x0F);
+		_delay_ms(10);
+		PORTD &= ~(1 << PORTD6);
+		PORTD &= ~(1 << PORTD7); 
+		multiplexor = 1;
+		} else {
+		// Mostrar nibble bajo (bits 0-3) activando PD6
+		PORTD |= (1 << PORTD6);
+		PORTD &= ~(1 << PORTD7);
+		PORTB = (PORTB & 0xF0) | (nibble_bajo & 0x0F);
+		_delay_ms(10);
+		PORTD &= ~(1 << PORTD6);
+		PORTD &= ~(1 << PORTD7);
+		multiplexor = 0;
+		
+	}
+}
+
 // ====================================================================
