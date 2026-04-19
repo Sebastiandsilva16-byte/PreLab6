@@ -63,6 +63,8 @@ void setup(void) {
     
     // Habilitar transmisor y receptor
     UCSR0B = (1 << TXEN0) | (1 << RXEN0);	
+	
+	cli();
 }
 
 	// Enviar un solo caracter
