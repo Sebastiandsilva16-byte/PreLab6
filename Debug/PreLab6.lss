@@ -1,0 +1,414 @@
+
+PreLab6.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .data         00000022  00800100  00000240  000002b4  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  1 .text         00000240  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .comment      00000030  00000000  00000000  000002d6  2**0
+                  CONTENTS, READONLY
+  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000308  2**2
+                  CONTENTS, READONLY
+  4 .debug_aranges 00000048  00000000  00000000  00000348  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_info   000008ad  00000000  00000000  00000390  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_abbrev 0000077e  00000000  00000000  00000c3d  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_line   00000388  00000000  00000000  000013bb  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_frame  0000009c  00000000  00000000  00001744  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_str    000003e4  00000000  00000000  000017e0  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_loc    00000184  00000000  00000000  00001bc4  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_ranges 00000038  00000000  00000000  00001d48  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 34 00 	jmp	0x68	; 0x68 <__ctors_end>
+   4:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+   8:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+   c:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  10:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  14:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  18:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  1c:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  20:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  24:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  28:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  2c:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  30:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  34:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  38:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  3c:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  40:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  44:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  48:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  4c:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  50:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  54:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  58:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  5c:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  60:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+  64:	0c 94 49 00 	jmp	0x92	; 0x92 <__bad_interrupt>
+
+00000068 <__ctors_end>:
+  68:	11 24       	eor	r1, r1
+  6a:	1f be       	out	0x3f, r1	; 63
+  6c:	cf ef       	ldi	r28, 0xFF	; 255
+  6e:	d8 e0       	ldi	r29, 0x08	; 8
+  70:	de bf       	out	0x3e, r29	; 62
+  72:	cd bf       	out	0x3d, r28	; 61
+
+00000074 <__do_copy_data>:
+  74:	11 e0       	ldi	r17, 0x01	; 1
+  76:	a0 e0       	ldi	r26, 0x00	; 0
+  78:	b1 e0       	ldi	r27, 0x01	; 1
+  7a:	e0 e4       	ldi	r30, 0x40	; 64
+  7c:	f2 e0       	ldi	r31, 0x02	; 2
+  7e:	02 c0       	rjmp	.+4      	; 0x84 <__do_copy_data+0x10>
+  80:	05 90       	lpm	r0, Z+
+  82:	0d 92       	st	X+, r0
+  84:	a2 32       	cpi	r26, 0x22	; 34
+  86:	b1 07       	cpc	r27, r17
+  88:	d9 f7       	brne	.-10     	; 0x80 <__do_copy_data+0xc>
+  8a:	0e 94 f3 00 	call	0x1e6	; 0x1e6 <main>
+  8e:	0c 94 1e 01 	jmp	0x23c	; 0x23c <_exit>
+
+00000092 <__bad_interrupt>:
+  92:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+00000096 <setup>:
+// ====================================================================
+// NON-Interrupt subroutines
+
+void setup(void) {
+	// Configurar PB0 a PB3 como salidas para LEDs
+	DDRB |= (1 << DDB0) | (1 << DDB1) | (1 << DDB2) | (1 << DDB3);
+  96:	84 b1       	in	r24, 0x04	; 4
+  98:	8f 60       	ori	r24, 0x0F	; 15
+  9a:	84 b9       	out	0x04, r24	; 4
+	PORTB &= ~((1 << PORTB0) | (1 << PORTB1) | (1 << PORTB2) | (1 << PORTB3));
+  9c:	85 b1       	in	r24, 0x05	; 5
+  9e:	80 7f       	andi	r24, 0xF0	; 240
+  a0:	85 b9       	out	0x05, r24	; 5
+	
+	// Configurar ADC6 como entrada analógica
+	ADMUX |= (1 << REFS0);                      // Referencia AVCC
+  a2:	ec e7       	ldi	r30, 0x7C	; 124
+  a4:	f0 e0       	ldi	r31, 0x00	; 0
+  a6:	80 81       	ld	r24, Z
+  a8:	80 64       	ori	r24, 0x40	; 64
+  aa:	80 83       	st	Z, r24
+	ADMUX |= (1 << MUX2) | (1 << MUX1);         // Seleccionar canal 6
+  ac:	80 81       	ld	r24, Z
+  ae:	86 60       	ori	r24, 0x06	; 6
+  b0:	80 83       	st	Z, r24
+	ADMUX &= ~((1 << MUX3) | (1 << MUX0));
+  b2:	80 81       	ld	r24, Z
+  b4:	86 7f       	andi	r24, 0xF6	; 246
+  b6:	80 83       	st	Z, r24
+	ADCSRA |= (1 << ADEN) | (1 << ADPS2) | (1 << ADPS1);  // Habilitar ADC, prescaler 64
+  b8:	ea e7       	ldi	r30, 0x7A	; 122
+  ba:	f0 e0       	ldi	r31, 0x00	; 0
+  bc:	80 81       	ld	r24, Z
+  be:	86 68       	ori	r24, 0x86	; 134
+  c0:	80 83       	st	Z, r24
+	
+	// Configurar PD6 y PD7 como salidas para multiplexar
+	DDRD |= (1 << DDD6) | (1 << DDD7);
+  c2:	8a b1       	in	r24, 0x0a	; 10
+  c4:	80 6c       	ori	r24, 0xC0	; 192
+  c6:	8a b9       	out	0x0a, r24	; 10
+	PORTD &= ~((1 << PORTD6) | (1 << PORTD7));
+  c8:	8b b1       	in	r24, 0x0b	; 11
+  ca:	8f 73       	andi	r24, 0x3F	; 63
+  cc:	8b b9       	out	0x0b, r24	; 11
+// Inicializar USART a 9600 baudios (para 16MHz)
+	// Configurar velocidad: 9600 baud @ 16MHz
+    UBRR0H = 0;
+  ce:	10 92 c5 00 	sts	0x00C5, r1	; 0x8000c5 <__TEXT_REGION_LENGTH__+0x7f80c5>
+    UBRR0L = 103;  // Formula: (F_CPU/(16*BAUD)) - 1 = (16000000/(16*9600)) - 1 = 103
+  d2:	87 e6       	ldi	r24, 0x67	; 103
+  d4:	80 93 c4 00 	sts	0x00C4, r24	; 0x8000c4 <__TEXT_REGION_LENGTH__+0x7f80c4>
+    
+    // Configurar formato: 8 bits, 1 stop bit, sin paridad
+    UCSR0C = (1 << UCSZ01) | (1 << UCSZ00);
+  d8:	86 e0       	ldi	r24, 0x06	; 6
+  da:	80 93 c2 00 	sts	0x00C2, r24	; 0x8000c2 <__TEXT_REGION_LENGTH__+0x7f80c2>
+    
+    // Habilitar transmisor y receptor
+    UCSR0B = (1 << TXEN0) | (1 << RXEN0);	
+  de:	88 e1       	ldi	r24, 0x18	; 24
+  e0:	80 93 c1 00 	sts	0x00C1, r24	; 0x8000c1 <__TEXT_REGION_LENGTH__+0x7f80c1>
+  e4:	08 95       	ret
+
+000000e6 <enviar_char>:
+}
+
+	// Enviar un solo caracter
+void enviar_char(char c) {
+    while (!(UCSR0A & (1 << UDRE0)));  // Esperar buffer vacío
+  e6:	90 91 c0 00 	lds	r25, 0x00C0	; 0x8000c0 <__TEXT_REGION_LENGTH__+0x7f80c0>
+  ea:	95 ff       	sbrs	r25, 5
+  ec:	fc cf       	rjmp	.-8      	; 0xe6 <enviar_char>
+    UDR0 = c;
+  ee:	80 93 c6 00 	sts	0x00C6, r24	; 0x8000c6 <__TEXT_REGION_LENGTH__+0x7f80c6>
+  f2:	08 95       	ret
+
+000000f4 <enviar_string>:
+}
+// Enviar una cadena de texto
+void enviar_string(char *s) {
+  f4:	cf 93       	push	r28
+  f6:	df 93       	push	r29
+  f8:	ec 01       	movw	r28, r24
+    while (*s) {
+  fa:	03 c0       	rjmp	.+6      	; 0x102 <enviar_string+0xe>
+        enviar_char(*s++);
+  fc:	21 96       	adiw	r28, 0x01	; 1
+  fe:	0e 94 73 00 	call	0xe6	; 0xe6 <enviar_char>
+    while (!(UCSR0A & (1 << UDRE0)));  // Esperar buffer vacío
+    UDR0 = c;
+}
+// Enviar una cadena de texto
+void enviar_string(char *s) {
+    while (*s) {
+ 102:	88 81       	ld	r24, Y
+ 104:	81 11       	cpse	r24, r1
+ 106:	fa cf       	rjmp	.-12     	; 0xfc <enviar_string+0x8>
+        enviar_char(*s++);
+    }
+}
+ 108:	df 91       	pop	r29
+ 10a:	cf 91       	pop	r28
+ 10c:	08 95       	ret
+
+0000010e <enviar_uint16_t>:
+
+// Enviar un número de 16 bits (0-65535) como texto
+void enviar_uint16_t(uint16_t valor) {
+ 10e:	0f 93       	push	r16
+ 110:	1f 93       	push	r17
+ 112:	cf 93       	push	r28
+ 114:	df 93       	push	r29
+ 116:	00 d0       	rcall	.+0      	; 0x118 <enviar_uint16_t+0xa>
+ 118:	00 d0       	rcall	.+0      	; 0x11a <enviar_uint16_t+0xc>
+ 11a:	00 d0       	rcall	.+0      	; 0x11c <enviar_uint16_t+0xe>
+ 11c:	cd b7       	in	r28, 0x3d	; 61
+ 11e:	de b7       	in	r29, 0x3e	; 62
+ 120:	ac 01       	movw	r20, r24
+    char buffer[6];  //65535 + null
+    int i = 0;
+    
+    // Manejar caso especial 0
+    if (valor == 0) {
+ 122:	89 2b       	or	r24, r25
+ 124:	99 f5       	brne	.+102    	; 0x18c <enviar_uint16_t+0x7e>
+        enviar_char('0');
+ 126:	80 e3       	ldi	r24, 0x30	; 48
+ 128:	0e 94 73 00 	call	0xe6	; 0xe6 <enviar_char>
+ 12c:	43 c0       	rjmp	.+134    	; 0x1b4 <enviar_uint16_t+0xa6>
+        return;
+    }
+    
+    // Convertir número a string (dígito por dígito)
+    while (valor > 0) {
+        buffer[i++] = '0' + (valor % 10);  // Último dígito
+ 12e:	9a 01       	movw	r18, r20
+ 130:	ad ec       	ldi	r26, 0xCD	; 205
+ 132:	bc ec       	ldi	r27, 0xCC	; 204
+ 134:	0e 94 0f 01 	call	0x21e	; 0x21e <__umulhisi3>
+ 138:	96 95       	lsr	r25
+ 13a:	87 95       	ror	r24
+ 13c:	96 95       	lsr	r25
+ 13e:	87 95       	ror	r24
+ 140:	96 95       	lsr	r25
+ 142:	87 95       	ror	r24
+ 144:	9c 01       	movw	r18, r24
+ 146:	22 0f       	add	r18, r18
+ 148:	33 1f       	adc	r19, r19
+ 14a:	88 0f       	add	r24, r24
+ 14c:	99 1f       	adc	r25, r25
+ 14e:	88 0f       	add	r24, r24
+ 150:	99 1f       	adc	r25, r25
+ 152:	88 0f       	add	r24, r24
+ 154:	99 1f       	adc	r25, r25
+ 156:	82 0f       	add	r24, r18
+ 158:	93 1f       	adc	r25, r19
+ 15a:	9a 01       	movw	r18, r20
+ 15c:	28 1b       	sub	r18, r24
+ 15e:	39 0b       	sbc	r19, r25
+ 160:	c9 01       	movw	r24, r18
+ 162:	e1 e0       	ldi	r30, 0x01	; 1
+ 164:	f0 e0       	ldi	r31, 0x00	; 0
+ 166:	ec 0f       	add	r30, r28
+ 168:	fd 1f       	adc	r31, r29
+ 16a:	e0 0f       	add	r30, r16
+ 16c:	f1 1f       	adc	r31, r17
+ 16e:	80 5d       	subi	r24, 0xD0	; 208
+ 170:	80 83       	st	Z, r24
+        valor /= 10;
+ 172:	9a 01       	movw	r18, r20
+ 174:	0e 94 0f 01 	call	0x21e	; 0x21e <__umulhisi3>
+ 178:	ac 01       	movw	r20, r24
+ 17a:	56 95       	lsr	r21
+ 17c:	47 95       	ror	r20
+ 17e:	56 95       	lsr	r21
+ 180:	47 95       	ror	r20
+ 182:	56 95       	lsr	r21
+ 184:	47 95       	ror	r20
+        return;
+    }
+    
+    // Convertir número a string (dígito por dígito)
+    while (valor > 0) {
+        buffer[i++] = '0' + (valor % 10);  // Último dígito
+ 186:	0f 5f       	subi	r16, 0xFF	; 255
+ 188:	1f 4f       	sbci	r17, 0xFF	; 255
+ 18a:	02 c0       	rjmp	.+4      	; 0x190 <enviar_uint16_t+0x82>
+ 18c:	00 e0       	ldi	r16, 0x00	; 0
+ 18e:	10 e0       	ldi	r17, 0x00	; 0
+        enviar_char('0');
+        return;
+    }
+    
+    // Convertir número a string (dígito por dígito)
+    while (valor > 0) {
+ 190:	41 15       	cp	r20, r1
+ 192:	51 05       	cpc	r21, r1
+ 194:	61 f6       	brne	.-104    	; 0x12e <enviar_uint16_t+0x20>
+ 196:	0b c0       	rjmp	.+22     	; 0x1ae <enviar_uint16_t+0xa0>
+        valor /= 10;
+    }
+    
+    // Enviar en orden inverso (dígitos correctos)
+    while (i > 0) {
+        enviar_char(buffer[--i]);
+ 198:	01 50       	subi	r16, 0x01	; 1
+ 19a:	11 09       	sbc	r17, r1
+ 19c:	e1 e0       	ldi	r30, 0x01	; 1
+ 19e:	f0 e0       	ldi	r31, 0x00	; 0
+ 1a0:	ec 0f       	add	r30, r28
+ 1a2:	fd 1f       	adc	r31, r29
+ 1a4:	e0 0f       	add	r30, r16
+ 1a6:	f1 1f       	adc	r31, r17
+ 1a8:	80 81       	ld	r24, Z
+ 1aa:	0e 94 73 00 	call	0xe6	; 0xe6 <enviar_char>
+        buffer[i++] = '0' + (valor % 10);  // Último dígito
+        valor /= 10;
+    }
+    
+    // Enviar en orden inverso (dígitos correctos)
+    while (i > 0) {
+ 1ae:	10 16       	cp	r1, r16
+ 1b0:	11 06       	cpc	r1, r17
+ 1b2:	94 f3       	brlt	.-28     	; 0x198 <enviar_uint16_t+0x8a>
+        enviar_char(buffer[--i]);
+    }
+}
+ 1b4:	26 96       	adiw	r28, 0x06	; 6
+ 1b6:	0f b6       	in	r0, 0x3f	; 63
+ 1b8:	f8 94       	cli
+ 1ba:	de bf       	out	0x3e, r29	; 62
+ 1bc:	0f be       	out	0x3f, r0	; 63
+ 1be:	cd bf       	out	0x3d, r28	; 61
+ 1c0:	df 91       	pop	r29
+ 1c2:	cf 91       	pop	r28
+ 1c4:	1f 91       	pop	r17
+ 1c6:	0f 91       	pop	r16
+ 1c8:	08 95       	ret
+
+000001ca <leer_ADC6>:
+
+// Leer ADC6
+uint16_t leer_ADC6(void)
+{
+	ADCSRA |= (1 << ADSC);
+ 1ca:	ea e7       	ldi	r30, 0x7A	; 122
+ 1cc:	f0 e0       	ldi	r31, 0x00	; 0
+ 1ce:	80 81       	ld	r24, Z
+ 1d0:	80 64       	ori	r24, 0x40	; 64
+ 1d2:	80 83       	st	Z, r24
+	while (ADCSRA & (1 << ADSC));
+ 1d4:	80 91 7a 00 	lds	r24, 0x007A	; 0x80007a <__TEXT_REGION_LENGTH__+0x7f807a>
+ 1d8:	86 fd       	sbrc	r24, 6
+ 1da:	fc cf       	rjmp	.-8      	; 0x1d4 <leer_ADC6+0xa>
+	return ADC;
+ 1dc:	80 91 78 00 	lds	r24, 0x0078	; 0x800078 <__TEXT_REGION_LENGTH__+0x7f8078>
+ 1e0:	90 91 79 00 	lds	r25, 0x0079	; 0x800079 <__TEXT_REGION_LENGTH__+0x7f8079>
+}
+ 1e4:	08 95       	ret
+
+000001e6 <main>:
+void enviar_uint16_t(uint16_t valor);
+// ====================================================================
+// Main Function
+int main(void)
+{
+	setup();
+ 1e6:	0e 94 4b 00 	call	0x96	; 0x96 <setup>
+	enviar_string("Sistema iniciado\r\n");
+ 1ea:	80 e0       	ldi	r24, 0x00	; 0
+ 1ec:	91 e0       	ldi	r25, 0x01	; 1
+ 1ee:	0e 94 7a 00 	call	0xf4	; 0xf4 <enviar_string>
+    enviar_string("Valor ADC6:\r\n");
+ 1f2:	83 e1       	ldi	r24, 0x13	; 19
+ 1f4:	91 e0       	ldi	r25, 0x01	; 1
+ 1f6:	0e 94 7a 00 	call	0xf4	; 0xf4 <enviar_string>
+	while(1)
+	{
+	     uint16_t valor_adc = leer_ADC6();  // Leer ADC6
+ 1fa:	0e 94 e5 00 	call	0x1ca	; 0x1ca <leer_ADC6>
+        
+        enviar_uint16_t(valor_adc);        // Enviar valor numérico
+ 1fe:	0e 94 87 00 	call	0x10e	; 0x10e <enviar_uint16_t>
+        enviar_string("\r\n");              // Salto de línea
+ 202:	8e e1       	ldi	r24, 0x1E	; 30
+ 204:	91 e0       	ldi	r25, 0x01	; 1
+ 206:	0e 94 7a 00 	call	0xf4	; 0xf4 <enviar_string>
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+ 20a:	2f ef       	ldi	r18, 0xFF	; 255
+ 20c:	89 e6       	ldi	r24, 0x69	; 105
+ 20e:	98 e1       	ldi	r25, 0x18	; 24
+ 210:	21 50       	subi	r18, 0x01	; 1
+ 212:	80 40       	sbci	r24, 0x00	; 0
+ 214:	90 40       	sbci	r25, 0x00	; 0
+ 216:	e1 f7       	brne	.-8      	; 0x210 <main+0x2a>
+ 218:	00 c0       	rjmp	.+0      	; 0x21a <main+0x34>
+ 21a:	00 00       	nop
+ 21c:	ee cf       	rjmp	.-36     	; 0x1fa <main+0x14>
+
+0000021e <__umulhisi3>:
+ 21e:	a2 9f       	mul	r26, r18
+ 220:	b0 01       	movw	r22, r0
+ 222:	b3 9f       	mul	r27, r19
+ 224:	c0 01       	movw	r24, r0
+ 226:	a3 9f       	mul	r26, r19
+ 228:	70 0d       	add	r23, r0
+ 22a:	81 1d       	adc	r24, r1
+ 22c:	11 24       	eor	r1, r1
+ 22e:	91 1d       	adc	r25, r1
+ 230:	b2 9f       	mul	r27, r18
+ 232:	70 0d       	add	r23, r0
+ 234:	81 1d       	adc	r24, r1
+ 236:	11 24       	eor	r1, r1
+ 238:	91 1d       	adc	r25, r1
+ 23a:	08 95       	ret
+
+0000023c <_exit>:
+ 23c:	f8 94       	cli
+
+0000023e <__stop_program>:
+ 23e:	ff cf       	rjmp	.-2      	; 0x23e <__stop_program>
