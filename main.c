@@ -1,5 +1,5 @@
 /*
- * PostLab4
+ * PreLab6
  *
  * Author: Sebastian Da Silva 
  */
@@ -54,64 +54,82 @@ int main(void) {
 				enviar_string("\r\n> 2-LEDs ");
 			}
 			else if (comando == '2') {
-				uint16_t valor_temporal = 0;
-				uint8_t entrada_valida = 0;
+				char digitos[4] = {0, 0, 0, 0}; 
 				uint8_t digito_count = 0;
 				uint8_t leyendo = 0;
 				
-				enviar_string("Ingresa un valor de 3 digitos entre  0 y 255 ");
+				enviar_string("\rIngresa un valor de 3 digitos entre  0 y 255 ");
 				leyendo = 1;
 				
-					    while(leyendo == 1) {
-						    actualizar_leds(valor_leds);
-						    
-						    if (UCSR0A & (1 << RXC0)) {
-							    char c = recibir_char();
-							    
-							    if (c >= '0' && c <= '9') {
-								    enviar_char(c);  // eco
-								    valor_temporal = valor_temporal * 10 + (c - '0');
-								    digito_count++;
-								    
-								    if (digito_count == 3) {
-									    if (valor_temporal <= 256) {
-										    valor_leds = (uint8_t)valor_temporal;
-													limpiar_terminal();
-													enviar_string("========================\r\n ");
-													enviar_string("\r\nOK: LEDs actualizados\r\n ");
-													enviar_string("\r\n========================\r\n ");
-													enviar_string("\r\n=== Sistema ===\r\n");
-													enviar_string("Comandos: ");
-													enviar_string("\r\n> 1-ADC ");
-													enviar_string("\r\n> 2-LEDs ");
+					        while(leyendo == 1) {
+						        actualizar_leds(valor_leds);
+						        
+						        if (UCSR0A & (1 << RXC0)) {
+							        char c = recibir_char();
+							        
+							        if (c >= '0' && c <= '9') {
+								        enviar_char(c);  // eco
+								        digito_count++;
+								        
+								        // Cuando tengamos 3 dígitos, procesamos
+								        if (digito_count == 3) {
+										digitos[3] = '\0';  // Null terminator
+										uint16_t valor_temporal = (digitos[0] - '0') * 100 +(digitos[1] - '0') * 10 + (digitos[2] - '0');	
 											
-										    } else {
-											limpiar_terminal();	
-											enviar_string("========================\r\n ");
-										    enviar_string("\r\nError: debe ser <= 255 ");
-											enviar_string("\r\r========================\r\n ");
-											enviar_string("\r\n=== Sistema ===\r\n");
-											enviar_string("Comandos: ");
-											enviar_string("\r\n> 1-ADC ");
-											enviar_string("\r\n> 2-LEDs ");
-									    }
-									    leyendo = 0;  // salir del bucle
-								    }
-							    }
-							    else if (c == '\r' || c == '\n') {
-								    // ignorar enter
-							    }
-							    else {
-									limpiar_terminal();
-								    enviar_string("\r\nError: solo dígitos\r\n> ");
-								    leyendo = 0;  // salir con error
-							    }
-						    }
-					    }
+											
+									        if (valor_temporal <= 255) {
+										        valor_leds = (uint8_t)valor_temporal;
+										        limpiar_terminal();
+										        enviar_string("========================\r\n ");
+										        enviar_string("\r\nOK: LEDs actualizados a ");
+										        enviar_uint16_t(valor_temporal);
+										        enviar_string("\r\n ");
+										        enviar_string("\r\n========================\r\n ");
+										        enviar_string("\r\n=== Sistema ===\r\n");
+										        enviar_string("Comandos: ");
+										        enviar_string("\r\n> 1-ADC ");
+										        enviar_string("\r\n> 2-LEDs ");
+										        leyendo = 0;  // salir del bucle
+									        }
+									        else {
+										        limpiar_terminal();
+										        enviar_string("========================\r\n ");
+										        enviar_string("\r\nError: valor debe ser <= 255\r\n ");
+										        enviar_string("\r\n========================\r\n ");
+										        enviar_string("\r\n=== Sistema ===\r\n");
+										        enviar_string("Comandos: ");
+										        enviar_string("\r\n> 1-ADC ");
+										        enviar_string("\r\n> 2-LEDs ");
+												digitos[0] = 0;
+												digitos[1] = 0;
+												digitos[2] = 0;
+												digitos[3] = 0;
+												digito_count = 0;
+										        leyendo = 0;  // salir con error
+									        }
+								        }
+							        }
+							        else if (c == '\r' || c == '\n') {
+								        // Ignorar enters mientras no tengamos 3 dígitos
+								        if (digito_count > 0 && digito_count < 3) {
+									        limpiar_terminal();
+									        enviar_string("\r\nError: se necesitan exactamente 3 dígitos\r\n");
+									        enviar_string("Presiona 2 para intentar de nuevo\r\n> ");
+									        leyendo = 0;  // salir con error
+								        }
+							        }
+							        else {
+								        limpiar_terminal();
+								        enviar_string("\r\nError: solo se permiten dígitos (0-9)\r\n");
+								        enviar_string("Presiona 2 para intentar de nuevo\r\n> ");
+								        leyendo = 0;  // salir con error
+							        }
+						}
 				    }
-				}
+			    }
 			}
 		}
+	}
 // ====================================================================
 // NON-Interrupt subroutines
 
