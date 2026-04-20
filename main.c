@@ -57,10 +57,13 @@ int main(void) {
 				char digitos[4] = {0, 0, 0, 0}; 
 				uint8_t digito_count = 0;
 				uint8_t leyendo = 0;
+				uint8_t valor_temporal = 0;
+				uint8_t i = 0;
 				
 				enviar_string("\rIngresa un valor de 3 digitos entre  0 y 255 ");
 				leyendo = 1;
-				
+				i = 0;
+				valor_temporal = 0;
 					        while(leyendo == 1) {
 						        actualizar_leds(valor_leds);
 						        
@@ -68,17 +71,30 @@ int main(void) {
 							        char c = recibir_char();
 							        
 							        if (c >= '0' && c <= '9') {
-								        enviar_char(c);  // eco
+								        enviar_char(c);  // eco 
+										digitos[digito_count] = c;
 								        digito_count++;
 								        
 								        // Cuando tengamos 3 dígitos, procesamos
-								        if (digito_count == 3) {
-										digitos[3] = '\0';  // Null terminator
-										uint16_t valor_temporal = (digitos[0] - '0') * 100 +(digitos[1] - '0') * 10 + (digitos[2] - '0');	
+								        if (digito_count >= 2) {
+											 
+													
+											
+												if (i == 0){
+												// Primer dígito (centenas)
+												valor_temporal += (digitos[0] - 48) * 100;	
+												}
+												else if (i == 1){
+												valor_temporal += (digitos[1] - 48) * 10;
+												}
+												else if (i == 2){
+												valor_temporal += (digitos[2] - 48) * 1;	
+												}
+											i++;																				
 											
 											
-									        if (valor_temporal <= 255) {
-										        valor_leds = (uint8_t)valor_temporal;
+									        if (valor_temporal <= 255 && i >= 3) {
+										        
 										        limpiar_terminal();
 										        enviar_string("========================\r\n ");
 										        enviar_string("\r\nOK: LEDs actualizados a ");
@@ -90,8 +106,11 @@ int main(void) {
 										        enviar_string("\r\n> 1-ADC ");
 										        enviar_string("\r\n> 2-LEDs ");
 										        leyendo = 0;  // salir del bucle
+												
+												
+												valor_leds = (uint8_t)valor_temporal;
 									        }
-									        else {
+									        else if (i == 3) {
 										        limpiar_terminal();
 										        enviar_string("========================\r\n ");
 										        enviar_string("\r\nError: valor debe ser <= 255\r\n ");
@@ -106,6 +125,8 @@ int main(void) {
 												digitos[3] = 0;
 												digito_count = 0;
 										        leyendo = 0;  // salir con error
+											}else {
+											leyendo = 1;	
 									        }
 								        }
 							        }
